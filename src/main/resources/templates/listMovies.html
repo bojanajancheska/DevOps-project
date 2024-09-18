@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Movie Ticket Order Page - Welcome and Choose a Movie</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <style>
+    body {
+      max-width: 800px;
+      margin: auto;
+      background-color: #fff0f5;
+    }
+    .pink-theme {
+      background-color: #ffe6f2;
+      border-color: #ff99cc;
+    }
+    .pink-theme .form-control {
+      background-color: #fff0f5;
+    }
+    .pink-theme .btn-primary {
+      background-color: #ff99cc;
+      border-color: #ff66b2;
+    }
+    .pink-theme .btn-primary:hover {
+      background-color: #ff66b2;
+      border-color: #ff3385;
+    }
+    .header-pretty {
+      color: #ff66b2;
+      text-shadow: 1px 1px 2px #ffe6f2;
+      font-family: 'Arial', sans-serif;
+      font-weight: bold;
+      background: #ffe6f2;
+      padding: 10px;
+      border-radius: 10px;
+      border: 2px solid #ff99cc;
+      text-align: center;
+    }
+    .form-label {
+      font-weight: bold;
+    }
+    .btn-delete {
+      color: #ff3385;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <h1 class="header-pretty">Welcome to our Movie Ticket Shop App</h1>
+</header>
+<main>
+  <form th:method="GET" class="pink-theme p-3 mt-4 rounded">
+    <div class="mb-3">
+      <label for="titleSearch" class="form-label">Search by Title:</label>
+      <input type="text" placeholder="Title.." id="titleSearch" name="titleInput" class="form-control">
+    </div>
+    <div class="mb-3">
+      <label for="ratingSearch" class="form-label">Search by Greater than Rating:</label>
+      <input type="number" placeholder="Greater than rating" id="ratingSearch" name="ratingInput" class="form-control">
+    </div>
+    <div class="text-center">
+      <input type="submit" value="Search" class="btn btn-primary">
+    </div>
+  </form>
+
+  <div class="text-center mt-4">
+    <a th:href="@{/movies/add}" class="btn btn-outline-primary">Add New Movie</a>
+  </div>
+
+  <h2 class="text-center mt-4">Choose a Movie:</h2>
+
+  <form th:method="GET" th:action="@{/ticketOrder}" class="pink-theme p-3 rounded">
+    <div class="mb-3" th:each="movie : ${movies}">
+      <div class="form-check">
+        <input class="form-check-input" type="radio" th:value="${movie.getTitle()}" th:text="${movie.getTitle()} + ', Summary: ' +
+                        ${movie.getSummary()} + ', Rating: ' + ${movie.getRating()} + ', Production: ' +
+                        ${movie.getProduction().getName()}" name="movieTitle" id="movie${movie.getId()}">
+        <label class="form-check-label" th:for="${movie.getId()}"></label>
+      </div>
+      <div class="d-flex justify-content-between">
+        <a th:href="@{'/movies/edit-form/' + ${movie.getId()}}" title="Edit this movie" class="btn btn-outline-primary btn-sm">Edit</a>
+        <a th:href="@{'/movies/delete/' + ${movie.getId()}}" id="btnDelete" title="Delete this movie" class="btn btn-outline-danger btn-sm btn-delete">Delete</a>
+      </div>
+      <hr>
+    </div>
+    <h2 class="text-center mt-4">Choose Number of Tickets:</h2>
+    <div class="mb-3">
+      <input type="number" name="numTickets" min="1" max="10" class="form-control" placeholder="Number of tickets">
+    </div>
+    <div class="text-center">
+      <input type="submit" value="Submit" class="btn btn-primary">
+    </div>
+  </form>
+
+
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+O2vgHnb28G8ZXk+Il2mf9sOG7FUl" crossorigin="anonymous"></script>
+</body>
+</html>

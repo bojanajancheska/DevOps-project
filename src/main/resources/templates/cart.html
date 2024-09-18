@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .flex{
+            display:flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: "Roboto Light",sans-serif;
+        }
+    </style>
+</head>
+<body>
+<div class="flex">
+    <h1>Shoppin cart for user: <span th:text="${user.getUsername()}"></span></h1>
+    <div th:each="order : ${orders}" class="flex" style="border: solid 1px black">
+        <div>Movie: <span th:text="${order.getMovieTitle()}"></span></div>
+    </div>
+</div>
+</body>
+</html>

@@ -11,29 +11,33 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
-          java-version: '17'
-          distribution: 'temurin' 
+          java-version: '22'
+          distribution: 'temurin'
 
       - name: Grant execute permission for Maven Wrapper
         run: chmod +x ./mvnw
 
       - name: Build with Maven (skip tests)
-        run: mvn -f ./pom.xml clean package -DskipTests 
+        run: ./mvnw clean package -DskipTests
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
       - name: Log in to Docker Hub
-        run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+        run: |
+          echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
 
       - name: Build and push backend image
         uses: docker/build-push-action@v5
         with:
           context: ./
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/kiii-project:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/kiii-project:latest
+          load: false
+          no-cache: false
+          pull: false

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kiii-configmap
+  namespace: kiii-namespace
+data:
+  SPRING_DATASOURCE_URL: "jdbc:postgresql://postgres-service:5432/movies"
+  SPRING_DATASOURCE_PLATFORM: "postgres"
+  SPRING_JPA_HIBERNATE_DDL_AUTO: "create"
+  SPRING_DATASOURCE_INITIALIZATION_MODE: "always"
+  SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: "org.hibernate.dialect.PostgreSQLDialect"
+  POSTGRES_DB: "movies"
+  SPRING_JPA_DEFER_DATASOURCE_INITIALIZATION: "true"

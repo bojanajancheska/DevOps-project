@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kiii-deployment
+  namespace: kiii-namespace
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: movies-project
+  template:
+    metadata:
+      labels:
+        app: movies-project
+    spec:
+      containers:
+        - name: movies-project
+          image: bojanajancheska/kiii-project:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://postgres-service:5432/movies
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: db-secrets
+                  key: POSTGRES_USER
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-secrets
+                  key: POSTGRES_PASSWORD
+            - name: SPRING_JPA_HIBERNATE_DDL_AUTO
+              valueFrom:
+                configMapKeyRef:
+                  name: kiii-configmap
+                  key: SPRING_JPA_HIBERNATE_DDL_AUTO
+            - name: SPRING_DATASOURCE_INITIALIZATION_MODE
+              valueFrom:
+                configMapKeyRef:
+                  name: kiii-configmap
+                  key: SPRING_DATASOURCE_INITIALIZATION_MODE
+            - name: SPRING_DATASOURCE_PLATFORM
+              valueFrom:
+                configMapKeyRef:
+                  name: kiii-configmap
+                  key: SPRING_DATASOURCE_PLATFORM
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+
+

@@ -41,3 +41,38 @@ jobs:
           load: false
           no-cache: false
           pull: false
+  
+  ci-compose:
+    runs-on: ubuntu-latest
+    needs: [build-and-push-backend]
+
+    services:
+      db:
+        image: postgres:latest
+        ports:
+          - "5433:5432"
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        env:
+          POSTGRES_DB: movies
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: 24212002
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Build with Maven (skip tests)
+        run: mvn -f ./pom.xml clean package -DskipTests
+
+      - name: Set up Docker Compose
+        run: docker-compose -f docker-compose.yml up -d

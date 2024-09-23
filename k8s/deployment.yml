@@ -21,7 +21,7 @@ spec:
             - containerPort: 8080
           env:
             - name: SPRING_DATASOURCE_URL
-              value: jdbc:postgresql://postgres-service:5432/movies
+              value: jdbc:postgresql://citus-coordinator:5432/movies
             - name: SPRING_DATASOURCE_USERNAME
               valueFrom:
                 secretKeyRef:
@@ -47,11 +47,3 @@ spec:
                 configMapKeyRef:
                   name: kiii-configmap
                   key: SPRING_DATASOURCE_PLATFORM
-          livenessProbe:
-            httpGet:
-              path: /actuator/health
-              port: 8080
-            initialDelaySeconds: 30
-            periodSeconds: 10
-
-
